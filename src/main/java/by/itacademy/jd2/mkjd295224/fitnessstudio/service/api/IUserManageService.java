@@ -1,13 +1,14 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.service.api;
 
-import by.itacademy.jd2.mkjd295224.fitnessstudio.dto.UserDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.domain.User;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.dto.user.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 public interface IUserManageService {
-    void create(UserDto userDto);
+    void create(User user);
 
     List<UserDto> findAll();
 

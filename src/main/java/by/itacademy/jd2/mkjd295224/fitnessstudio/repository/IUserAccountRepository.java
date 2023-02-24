@@ -1,10 +1,12 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.repository;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.domain.User;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-public interface IUserAccountRepository extends PagingAndSortingRepository<User, UUID> {
+@Repository
+public interface IUserAccountRepository extends CrudRepository<User, UUID> {
 
 }

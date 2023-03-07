@@ -111,10 +111,6 @@
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="FallThrough"/>
-        <module name="HiddenField">
-            <property name="ignoreSetter" value="true"/>
-            <property name="ignoreConstructorParameter" value="true"/>
-        </module>
         <module name="IllegalCatch"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
@@ -247,10 +243,7 @@
             <property name="max" value="30"/>
         </module>
         <module name="OuterTypeNumber"/>
-        <module name="RecordComponentNumber"/>
-        <module name="ParameterNumber">
-            <property name="max" value="6"/>
-        </module>
+
 
         <!-- Checks for whitespace                               -->
         <!-- See https://checkstyle.org/config_whitespace.html -->

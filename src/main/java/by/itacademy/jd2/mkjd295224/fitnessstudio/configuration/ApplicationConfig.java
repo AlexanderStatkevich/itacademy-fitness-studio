@@ -8,4 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
 
+//    @Bean
+//    public ObjectMapper objectMapper(){
+//        return new ObjectMapper().configure(DeserializationFeature.);
+//    }
+
 }

@@ -1,56 +1,30 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Version;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 
 @Entity
-public class User {
-    @Id
-    private UUID uuid;
-    private LocalDateTime dtCreate;
-    @Version
-    private LocalDateTime dtUpdate;
+@Table(name = "users")
+public class User extends BaseEntityWithDateTime {
+    @Column(name = "mail")
     private String mail;
+    @Column(name = "full_name")
     private String fullName;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private UserRole role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private UserStatus status;
+    @Column(name = "password")
+    private String password;
 
     public User() {
     }
 
-    @PrePersist
-    void initDtCreate() {
-        this.dtCreate = LocalDateTime.now();
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public LocalDateTime getDtCreate() {
-        return dtCreate;
-    }
-
-    public void setDtCreate(LocalDateTime dtCreate) {
-        this.dtCreate = dtCreate;
-    }
-
-    public LocalDateTime getDtUpdate() {
-        return dtUpdate;
-    }
-
-    public void setDtUpdate(LocalDateTime dtUpdate) {
-        this.dtUpdate = dtUpdate;
-    }
 
     public String getMail() {
         return mail;
@@ -82,5 +56,13 @@ public class User {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

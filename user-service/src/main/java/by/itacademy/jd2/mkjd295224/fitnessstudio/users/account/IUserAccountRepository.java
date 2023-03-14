@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface IUserAccountRepository extends CrudRepository<User, UUID> {
-
+    User findUserByEmail(String mail);
 }

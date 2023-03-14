@@ -7,6 +7,7 @@ import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +33,13 @@ public class RecipeController {
         this.mapper = mapper;
     }
 
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody RecipeCreateDto recipeCreateDto) {
         recipeService.create(recipeCreateDto);
     }
+
 
     @GetMapping
     public Page<RecipeDto> getPage(Pageable pageable) {

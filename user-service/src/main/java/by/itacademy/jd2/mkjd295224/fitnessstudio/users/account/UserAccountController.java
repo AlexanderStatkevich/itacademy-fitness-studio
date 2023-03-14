@@ -1,7 +1,9 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.account;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.EmailVerificationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserLoginDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,15 +24,13 @@ public class UserAccountController {
 
     @PostMapping(path = "/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    //todo set response status or entity
     public void register(UserRegistrationDto userRegistrationDto) {
         userAccountService.register(userRegistrationDto);
     }
 
     @GetMapping(path = "/verification")
-    public void verify(@RequestParam String code,
-                       @RequestParam String mail) {
-        userAccountService.verify();
+    public void verify(@Valid @RequestParam EmailVerificationDto emailVerificationDto) {
+        userAccountService.verify(emailVerificationDto);
     }
 
     @PostMapping(path = "/login")

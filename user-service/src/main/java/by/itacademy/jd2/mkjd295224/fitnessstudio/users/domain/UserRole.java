@@ -1,6 +1,14 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain;
 
-public enum UserRole {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserRole implements GrantedAuthority {
+
     ADMIN,
-    USER
+    USER;
+
+    @Override
+    public String getAuthority() {
+        return this.name();
+    }
 }

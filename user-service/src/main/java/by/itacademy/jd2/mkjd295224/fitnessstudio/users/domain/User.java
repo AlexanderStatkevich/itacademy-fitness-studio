@@ -5,12 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntityWithDateTime {
-    @Column(name = "mail")
-    private String mail;
+public class User extends BaseEntityWithDateTime implements UserDetails {
+    @Column(name = "email")
+    private String email;
     @Column(name = "full_name")
     private String fullName;
     @Enumerated(EnumType.STRING)
@@ -25,13 +30,42 @@ public class User extends BaseEntityWithDateTime {
     public User() {
     }
 
-
-    public String getMail() {
-        return mail;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(role);
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFullName() {

@@ -46,4 +46,8 @@ public class UserAccountService implements IUserAccountService {
     public UserDto getInfo() {
         return null;
     }
+
+    public User getUserByUsername() {
+        return null;
+    }
 }

@@ -12,11 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class JwtTokenUtil {
+public class JwtTokenProcessor {
 
     private static final String jwtSecret = "NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw";
     private static final String jwtIssuer = "ITAcademy";
-
 
     public static String generateAccessToken(UserDetails user) {
         return generateAccessToken(user.getUsername());

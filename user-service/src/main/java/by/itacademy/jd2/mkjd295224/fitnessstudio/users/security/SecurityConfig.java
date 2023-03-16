@@ -1,89 +1,66 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.security;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
-import org.springframework.security.authorization.AuthorityAuthorizationManager;
-import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.web.access.intercept.RequestMatcherDelegatingAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtFilter filter;
 
-    public SecurityConfig(JwtFilter filter) {
+    private JwtAuthEntryPoint authEntryPoint;
+
+    public SecurityConfig(JwtFilter filter, JwtAuthEntryPoint authEntryPoint) {
         this.filter = filter;
+        this.authEntryPoint = authEntryPoint;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthorizationManager<RequestAuthorizationContext> access) throws Exception {
 
-        http = http.cors().and().csrf().disable();
-
-        http = http
+        http.cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
-
-        http = http
+                .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
-                )
-                .and();
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().access(access)
-                );
+                .authenticationEntryPoint(authEntryPoint)
+                .and()
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/verification").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/registration").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
+                        .requestMatchers("/api/v1/users/me").authenticated()
+                        .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+                        .anyRequest().authenticated());
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilterBefore(
-                filter,
-                UsernamePasswordAuthenticationFilter.class
-        );
         return http.build();
     }
 
     @Bean
-    AuthorizationManager<RequestAuthorizationContext> requestMatcherAuthorizationManager(HandlerMappingIntrospector introspector) {
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
-        RequestMatcher permitAll = new AndRequestMatcher(
-                mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/v1/users/verification"),
-                mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/v1/users/registration"),
-                mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/v1/users/login"));
-        RequestMatcher me = mvcMatcherBuilder.pattern("/api/v1/users/me");
-        RequestMatcher admin = mvcMatcherBuilder.pattern("/api/v1/users/**");
-        RequestMatcher any = AnyRequestMatcher.INSTANCE;
-        AuthorizationManager<HttpServletRequest> manager = RequestMatcherDelegatingAuthorizationManager.builder()
-                .add(permitAll, (context, con) -> new AuthorizationDecision(true))
-                .add(me, new AuthenticatedAuthorizationManager())
-                .add(admin, AuthorityAuthorizationManager.hasRole("ADMIN"))
-                .add(any, new AuthenticatedAuthorizationManager())
-                .build();
-        return (context) -> manager.check(context.get());
+    public JwtTokenProcessor JwtTokenProcessor() {
+        return new JwtTokenProcessor();
     }
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
-        return new JwtTokenUtil();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }

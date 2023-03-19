@@ -1,7 +1,8 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.mail.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record EmailVerificationDto(
 

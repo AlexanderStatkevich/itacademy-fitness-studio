@@ -1,14 +1,17 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record UserLoginDto(
-        String mail,
+        @JsonProperty(value = "mail")
+        String email,
         String password) {
 }
 
 /*
 JSON user login object
 {
-        "mail": "string",
+        "email": "string",
         "password": "string"
         }
  */

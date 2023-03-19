@@ -46,7 +46,7 @@ public class RecipeController {
         Page<Recipe> recipePage = recipeService.findAll(pageable);
         return recipePage.map(mapper::toDto);
     }
-
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public void update(@PathVariable("uuid") UUID uuid,
                        @PathVariable("dt_update") LocalDateTime dtUpdate,

@@ -1,14 +1,15 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.account;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.EmailVerificationDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserLoginDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,23 +25,25 @@ public class UserAccountController {
 
     @PostMapping(path = "/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(UserRegistrationDto userRegistrationDto) {
+    public void register(@RequestBody UserRegistrationDto userRegistrationDto) {
         userAccountService.register(userRegistrationDto);
     }
 
     @GetMapping(path = "/verification")
-    public void verify(@Valid @RequestParam EmailVerificationDto emailVerificationDto) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public void verify(@Valid EmailVerificationDto emailVerificationDto) {
         userAccountService.verify(emailVerificationDto);
     }
 
     @PostMapping(path = "/login")
-    //todo set response status or entity
-    public void login(UserLoginDto userLoginDto) {
-        userAccountService.login(userLoginDto);
+    @ResponseStatus(value = HttpStatus.OK)
+    public String login(@RequestBody UserLoginDto userLoginDto) {
+        return userAccountService.login(userLoginDto);
     }
 
     @GetMapping(path = "/me")
-    public void getPersonalInfo() {
-        userAccountService.getInfo();
+    @ResponseStatus(value = HttpStatus.OK)
+    public UserDto getPersonalInfo() {
+        return userAccountService.getInfo();
     }
 }

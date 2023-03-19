@@ -5,6 +5,7 @@ import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.mapper.RecipeMapper;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeCreateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class RecipeService implements IRecipeService {
         this.mapper = mapper;
     }
 
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @Override
     public void create(RecipeCreateDto recipeCreateDto) {
         Recipe recipe = mapper.toEntity(recipeCreateDto);

@@ -13,10 +13,10 @@ spring:
     password: Aries1994
     driverClassName: org.postgresql.Driver
 
-user-service:
-  mail-service:
-    uri: http://localhost:1111/api/v1/mail
 
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
   issuer: ITAcademy
+
+server:
+  port: 2222

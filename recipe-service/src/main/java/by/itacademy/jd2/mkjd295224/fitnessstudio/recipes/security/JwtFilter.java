@@ -8,30 +8,25 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserDetailsManager userManager;
+    private final JwtTokenProcessor jwtTokenProcessor;
 
-    public JwtFilter(UserDetailsManager userManager) {
-        this.userManager = userManager;
+    public JwtFilter(JwtTokenProcessor jwtTokenProcessor) {
+        this.jwtTokenProcessor = jwtTokenProcessor;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
@@ -39,27 +34,24 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenUtil.validate(token)) {
+        boolean validate = jwtTokenProcessor.validate(token);
+
+        if (!validate) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Get user identity and set it on the spring security context
-        UserDetails userDetails = userManager
-                .loadUserByUsername(JwtTokenUtil.getUsername(token));
+        String username = jwtTokenProcessor.getUsername(token);
+        String role = jwtTokenProcessor.getRole(token);
+        UserDetails userDetails = new JwtUserDetails(username, role);
 
-        UsernamePasswordAuthenticationToken
-                authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                userDetails == null ?
-                        List.of() : userDetails.getAuthorities()
-        );
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities());
 
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);

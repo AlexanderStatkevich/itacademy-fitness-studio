@@ -1,4 +1,4 @@
-package by.itacademy.jd2.mkjd295224.fitnessstudio.users.security;
+package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

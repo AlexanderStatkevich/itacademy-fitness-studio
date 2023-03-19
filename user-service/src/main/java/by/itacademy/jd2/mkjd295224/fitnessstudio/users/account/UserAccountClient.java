@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(value = "userAccountClient", url = "${user-service.mail-service.uri}")
 public interface UserAccountClient {
     @GetMapping(value = "/verify")
-    Boolean verify(@RequestParam String email, @RequestParam String code);
+    Boolean verify(@RequestParam("email") String email, @RequestParam("code") String code);
 
     @PostMapping(value = "/send", produces = "application/json")
     void send(@RequestBody EmailDto emailDto);

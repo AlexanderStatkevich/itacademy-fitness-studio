@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,14 +21,18 @@ import static org.apache.logging.log4j.util.Strings.isEmpty;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserDetailsManager userManager;
+    private final UserDetailsService userDetailsService;
 
-    public JwtFilter(UserDetailsManager userManager) {
-        this.userManager = userManager;
+    private final JwtTokenProcessor jwtTokenProcessor;
+
+    public JwtFilter(UserDetailsService userDetailsService, JwtTokenProcessor jwtTokenProcessor) {
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenProcessor = jwtTokenProcessor;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
@@ -36,15 +40,14 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
-        if (!JwtTokenProcessor.validate(token)) {
+        if (!jwtTokenProcessor.validate(token)) {
             chain.doFilter(request, response);
             return;
         }
 
         // Get user identity and set it on the spring security context
-        UserDetails userDetails = userManager.loadUserByUsername(JwtTokenProcessor.getUsername(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenProcessor.getUsername(token));
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
                 null,

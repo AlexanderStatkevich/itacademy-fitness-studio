@@ -3,13 +3,13 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.mail;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.mail.dto.EmailDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.mail.dto.EmailVerificationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.mail.service.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 
 
 @RestController

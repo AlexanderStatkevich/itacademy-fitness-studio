@@ -17,7 +17,8 @@ public record UserDto(
         @JsonProperty(value = "dt_update")
         @JsonSerialize(using = UnixSerializer.class)
         LocalDateTime dateTimeUpdate,
-        String mail,
+        @JsonProperty(value = "mail")
+        String email,
         String fullName,
         UserRole role,
         UserStatus status
@@ -29,7 +30,7 @@ public record UserDto(
 //  "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 //  "dt_create": 0,
 //  "dt_update": 0,
-//  "mail": "string",
+//  "email": "string",
 //  "fio": "string",
 //  "role": "ADMIN",
 //  "status": "WAITING_ACTIVATION"

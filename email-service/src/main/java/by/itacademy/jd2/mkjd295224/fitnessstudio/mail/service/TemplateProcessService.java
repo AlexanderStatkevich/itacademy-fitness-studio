@@ -2,15 +2,13 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.mail.service;
 
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.Locale;
 import java.util.Map;
 
 @Service
 public class TemplateProcessService {
-
-
     private static final String EMAIL_TEMPLATE = "email-template";
     private final SpringTemplateEngine templateEngine;
 

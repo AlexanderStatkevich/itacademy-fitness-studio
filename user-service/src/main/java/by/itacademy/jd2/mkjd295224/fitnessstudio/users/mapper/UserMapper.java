@@ -1,17 +1,22 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.mapper;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper
 public interface UserMapper {
 
-    User toEntity(UserCreateDto source);
+    User toEntity(UserCreateUpdateDto source);
+
+    @Mapping(target = "password", ignore = true)
+    User toEntity(UserRegistrationDto source);
 
     UserDto toDto(User source);
 
-    void map(UserCreateDto source, @MappingTarget User target);
+    void map(UserCreateUpdateDto source, @MappingTarget User target);
 }

@@ -1,8 +1,9 @@
-FROM eclipse-temurin:19-jre-focal
+FROM openjdk:17-alpine
+
 MAINTAINER ITAcademy
 
-ADD ./target/user-service.jar /app/
+COPY ./target/*.jar app.jar
 
-CMD ["java", "-Xmx200m", "-jar", "/app/user-service.jar"]
+ENTRYPOINT ["java", "-Xmx200m", "-jar", "/app.jar"]
 
 EXPOSE 8080 8089

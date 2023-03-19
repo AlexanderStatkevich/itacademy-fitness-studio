@@ -1,7 +1,7 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.manage;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.mapper.UserMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +22,8 @@ public class UserManageService implements IUserManageService {
     }
 
     @Override
-    public void create(UserCreateDto userCreateDto) {
-        User user = mapper.toEntity(userCreateDto);
+    public void create(UserCreateUpdateDto userCreateUpdateDto) {
+        User user = mapper.toEntity(userCreateUpdateDto);
         repository.save(user);
     }
 
@@ -38,9 +38,9 @@ public class UserManageService implements IUserManageService {
     }
 
     @Override
-    public void update(UUID uuid, LocalDateTime dateTimeUpdate, UserCreateDto userCreateDto) {
+    public void update(UUID uuid, LocalDateTime dateTimeUpdate, UserCreateUpdateDto userCreateUpdateDto) {
         User user = repository.getReferenceById(uuid);
-        mapper.map(userCreateDto, user);
+        mapper.map(userCreateUpdateDto, user);
         user.setDateTimeUpdate(dateTimeUpdate);
         repository.save(user);
     }

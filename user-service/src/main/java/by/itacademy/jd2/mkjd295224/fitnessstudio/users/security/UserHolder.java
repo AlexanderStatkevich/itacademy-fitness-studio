@@ -10,5 +10,4 @@ public class UserHolder {
     public UserDetails getUser() {
         return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
-
 }

@@ -1,11 +1,14 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
 public record UserRegistrationDto(
         @NotBlank
-        String mail,
+        @JsonProperty(value = "mail")
+        String email,
         @NotBlank
+        @JsonProperty(value = "fio")
         String fullName,
         @NotBlank
         String password) {
@@ -14,8 +17,8 @@ public record UserRegistrationDto(
 /*
 JSON user register object
 {
-        "mail":"string",
-        "fio":"string",
+        "email":"new",
+        "fio":"kwjefjowef",
         "password":"string"
         }
  */

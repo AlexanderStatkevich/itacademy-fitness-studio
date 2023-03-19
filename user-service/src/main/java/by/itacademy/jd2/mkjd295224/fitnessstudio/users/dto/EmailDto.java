@@ -4,6 +4,6 @@ import java.util.Map;
 
 public record EmailDto(
         String email,
-        Map<String, Object> templateModel
+        Map<String, Object> model
 ) {
 }

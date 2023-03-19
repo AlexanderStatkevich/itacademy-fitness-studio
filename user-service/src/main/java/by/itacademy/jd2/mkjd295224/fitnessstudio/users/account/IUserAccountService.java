@@ -10,7 +10,7 @@ public interface IUserAccountService {
 
     boolean verify(EmailVerificationDto emailVerificationDto);
 
-    void login(UserLoginDto userLoginDto);
+    String login(UserLoginDto userLoginDto);
 
     UserDto getInfo();
 }

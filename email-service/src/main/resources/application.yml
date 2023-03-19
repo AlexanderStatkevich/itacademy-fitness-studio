@@ -3,8 +3,8 @@ spring:
     default-encoding: UTF-8
     host: smtp.gmail.com
     port: 587
-    username: fitnessappcheckmail@gmail.com
-    password: mvqxjibztdrzfooy
+    username: change_me
+    password: change_me
     properties:
       mail:
         smtp:
@@ -20,3 +20,6 @@ spring:
     username: postgres
     password: Aries1994
     driverClassName: org.postgresql.Driver
+
+server:
+  port: 1111

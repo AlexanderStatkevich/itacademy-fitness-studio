@@ -1,56 +1,60 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security;
 
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtFilter filter;
+    private final JwtAuthEntryPoint authEntryPoint;
 
-    public SecurityConfig(JwtFilter filter) {
-        this.filter = filter;
+    private final JwtDeniedHandler jwtDeniedHandler;
+
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, JwtDeniedHandler jwtDeniedHandler) {
+
+        this.authEntryPoint = authEntryPoint;
+        this.jwtDeniedHandler = jwtDeniedHandler;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthorizationManager<RequestAuthorizationContext> access) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtFilter filter) throws Exception {
 
-        http = http.cors().and().csrf().disable();
-
-        http = http
+        http.cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
-
-        http = http
+                .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    ex.getMessage()
-                            );
-                        }
-                )
-                .and();
+                .authenticationEntryPoint(authEntryPoint)
+                .accessDeniedHandler(jwtDeniedHandler)
+                .and()
+                .authorizeHttpRequests((req) -> req
+                        .requestMatchers(HttpMethod.GET, "/api/v1/product", "/api/v1/recipe").permitAll()
+                        .anyRequest().authenticated());
 
-        http.addFilterBefore(
-                filter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
 
     @Bean
-    public JwtTokenUtil jwtTokenUtil() {
-        return new JwtTokenUtil();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

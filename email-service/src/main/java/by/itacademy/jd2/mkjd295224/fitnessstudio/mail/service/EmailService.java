@@ -12,6 +12,7 @@ public class EmailService {
 
     public static final String SUBJECT = "Email verification";
     public static final String VERIFICATION_CODE_MODEL_KEY = "code";
+    public static final String EMAIL_MODEL_KEY = "email";
     private final EmailSendingService emailSendingService;
     private final TemplateProcessService templateProcessService;
 
@@ -30,6 +31,7 @@ public class EmailService {
 
         Map<String, Object> model = emailDto.model();
         model.put(VERIFICATION_CODE_MODEL_KEY, verificationCode);
+        model.put(EMAIL_MODEL_KEY, email);
         String html = templateProcessService.fillTemplate(model);
         emailSendingService.sendEmail(email, SUBJECT, html);
     }

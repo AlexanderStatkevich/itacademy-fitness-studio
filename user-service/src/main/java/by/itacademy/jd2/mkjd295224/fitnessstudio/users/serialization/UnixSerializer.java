@@ -10,8 +10,8 @@ import java.time.ZoneOffset;
 
 
 public class UnixSerializer extends JsonSerializer<LocalDateTime> {
-        @Override
-        public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-                gen.writeNumber(value.toInstant(ZoneOffset.UTC).toEpochMilli());
-        }
+    @Override
+    public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        gen.writeNumber(value.toInstant(ZoneOffset.UTC).toEpochMilli());
+    }
 }

@@ -1,7 +1,7 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.manage;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.mapper.UserMapper;
 import org.springframework.data.domain.Page;
@@ -33,8 +33,8 @@ public class UserManageController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody UserCreateDto userCreateDto) {
-        userManageService.create(userCreateDto);
+    public void create(@RequestBody UserCreateUpdateDto userCreateUpdateDto) {
+        userManageService.create(userCreateUpdateDto);
     }
 
     @GetMapping
@@ -52,7 +52,7 @@ public class UserManageController {
     @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public void update(@PathVariable("uuid") UUID uuid,
                        @PathVariable("dt_update") LocalDateTime dateTimeUpdate,
-                       @RequestBody UserCreateDto userCreateDto) {
-        userManageService.update(uuid, dateTimeUpdate, userCreateDto);
+                       @RequestBody UserCreateUpdateDto userCreateUpdateDto) {
+        userManageService.update(uuid, dateTimeUpdate, userCreateUpdateDto);
     }
 }

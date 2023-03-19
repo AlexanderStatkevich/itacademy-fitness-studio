@@ -7,7 +7,7 @@
 Hello,<b th:text="${name}"></b>.
 
 For verification please use this link:
-<a th:href="@{${host}/verify(code=${code}, email=${email})}"></a>
+<a th:href="@{{host}/verification(host = ${host},code=${code}, mail=${email})}"></a>
 
 <p>
     Regards, <br/>

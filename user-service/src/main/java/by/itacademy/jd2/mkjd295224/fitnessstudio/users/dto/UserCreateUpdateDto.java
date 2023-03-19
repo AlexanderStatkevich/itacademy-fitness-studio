@@ -4,8 +4,9 @@ import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.UserRole;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.UserStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record UserCreateDto(
-        String mail,
+public record UserCreateUpdateDto(
+        @JsonProperty(value = "mail")
+        String email,
         @JsonProperty(value = "fio")
         String fullName,
         UserRole role,
@@ -17,7 +18,7 @@ public record UserCreateDto(
 /*
 JSON user create and update object
 {
-        "mail": "string",
+        "email": "string",
         "fio": "string",
         "role": "ADMIN",
         "status": "WAITING_ACTIVATION",

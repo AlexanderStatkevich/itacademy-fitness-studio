@@ -1,13 +1,21 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.serialization.UnixSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ProductDto(
         UUID uuid,
-        LocalDateTime dateCreate,
-        LocalDateTime dateUpdate,
+        @JsonProperty(value = "dt_create")
+        @JsonSerialize(using = UnixSerializer.class)
+        LocalDateTime dateTimeCreate,
+        @JsonProperty(value = "dt_update")
+        @JsonSerialize(using = UnixSerializer.class)
+        LocalDateTime dateTimeUpdate,
         String title,
         BigDecimal weight,
         BigDecimal calories,
@@ -16,16 +24,3 @@ public record ProductDto(
         BigDecimal carbohydrates
 ) {
 }
-
-/*
-JSON product return object
-      "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "dt_create": 0,
-      "dt_update": 0,
-      "title": "Гречка",
-      "weight": 100,
-      "calories": 308,
-      "proteins": 12.6,
-      "fats": 3.3,
-      "carbohydrates": 57.1
- */

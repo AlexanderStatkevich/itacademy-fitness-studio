@@ -2,9 +2,9 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product;
 
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain.Product;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.mapper.ProductMapper;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.ProductCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.ProductCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.ProductDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,6 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
-
     private final ProductMapper mapper;
 
     public ProductController(ProductService productService, ProductMapper mapper) {
@@ -37,11 +36,9 @@ public class ProductController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody ProductCreateDto productCreateDto) {
-        productService.create(productCreateDto);
+    public void create(@RequestBody ProductCreateUpdateDto productCreateUpdateDto) {
+        productService.create(productCreateUpdateDto);
     }
-
-
 
     @GetMapping
     public Page<ProductDto> getPage(Pageable pageable) {
@@ -49,11 +46,11 @@ public class ProductController {
         return productPage.map(mapper::toDto);
     }
 
-    @PreAuthorize(value = "hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public void update(@PathVariable("uuid") UUID uuid,
                        @PathVariable("dt_update") LocalDateTime dtUpdate,
-                       @RequestBody ProductCreateDto productCreateDto) {
-        productService.update(uuid, dtUpdate, productCreateDto);
+                       @RequestBody ProductCreateUpdateDto productCreateUpdateDto) {
+        productService.update(uuid, dtUpdate, productCreateUpdateDto);
     }
 }

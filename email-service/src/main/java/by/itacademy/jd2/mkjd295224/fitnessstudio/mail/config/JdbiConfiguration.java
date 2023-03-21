@@ -13,16 +13,6 @@ import java.util.List;
 
 @Configuration
 public class JdbiConfiguration {
-
-    //    @Bean
-//    public Jdbi jdbi(DataSource dataSource, List<JdbiPlugin> jdbiPlugins, List<RowMapper<?>> rowMappers) {
-//        TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(dataSource);
-//        Jdbi jdbi = Jdbi.create(proxy);
-//        jdbiPlugins.forEach(jdbi::installPlugin);
-//        rowMappers.forEach(jdbi::registerRowMapper);
-//        return jdbi;
-//    }
-
     @Bean
     public JdbiFactoryBean jdbi(DataSource dataSource) {
         return new JdbiFactoryBean(dataSource);

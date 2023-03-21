@@ -3,7 +3,6 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
 
 import java.time.LocalDateTime;
@@ -47,10 +46,5 @@ public abstract class BaseEntityWithDateTime extends BaseEntity {
         LocalDateTime now = LocalDateTime.now();
         this.dateTimeCreate = now;
         this.dateTimeUpdate = now;
-    }
-
-    @PreUpdate
-    void updateDateTimeUpdate() {
-        this.dateTimeUpdate = LocalDateTime.now();
     }
 }

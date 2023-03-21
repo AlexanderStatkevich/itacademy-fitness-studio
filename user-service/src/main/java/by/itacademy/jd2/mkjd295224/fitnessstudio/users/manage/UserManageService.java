@@ -2,9 +2,10 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.users.manage;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.mapper.UserMapper;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.mapper.UserMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,16 +15,21 @@ import java.util.UUID;
 public class UserManageService implements IUserManageService {
 
     private final IUserManageRepository repository;
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserManageService(IUserManageRepository repository, UserMapper mapper) {
+
+    public UserManageService(IUserManageRepository repository, UserMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
-        this.mapper = mapper;
+        this.userMapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void create(UserCreateUpdateDto userCreateUpdateDto) {
-        User user = mapper.toEntity(userCreateUpdateDto);
+        User user = userMapper.toEntity(userCreateUpdateDto);
+        user.setUuid(UUID.randomUUID());
+        user.setPassword(passwordEncoder.encode(userCreateUpdateDto.password()));
         repository.save(user);
     }
 
@@ -40,8 +46,12 @@ public class UserManageService implements IUserManageService {
     @Override
     public void update(UUID uuid, LocalDateTime dateTimeUpdate, UserCreateUpdateDto userCreateUpdateDto) {
         User user = repository.getReferenceById(uuid);
-        mapper.map(userCreateUpdateDto, user);
+        userMapper.map(userCreateUpdateDto, user);
         user.setDateTimeUpdate(dateTimeUpdate);
         repository.save(user);
+    }
+
+    public boolean notExistsByEmail(String email) {
+        return !repository.existsByEmail(email);
     }
 }

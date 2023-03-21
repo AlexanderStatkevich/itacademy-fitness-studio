@@ -9,4 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface IUserManageRepository extends JpaRepository<User, UUID>, PagingAndSortingRepository<User, UUID> {
+    boolean existsByEmail(String email);
 }

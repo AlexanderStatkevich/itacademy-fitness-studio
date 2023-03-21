@@ -25,7 +25,6 @@ public class User extends BaseEntityWithDateTime {
     public User() {
     }
 
-
     public String getEmail() {
         return email;
     }

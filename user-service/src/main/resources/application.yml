@@ -8,14 +8,14 @@ spring:
       hibernate:
         default_schema: data
   datasource:
-    url: jdbc:postgresql://localhost:5777/fitnessDB
-    username: postgres
-    password: Aries1994
+    url: jdbc:postgresql://user-db:5432/user
+    username: root
+    password: root
     driverClassName: org.postgresql.Driver
 
 user-service:
   mail-service:
-    uri: http://localhost:1111/api/v1/mail
+    uri: http://email-service:8080/api/v1/mail
 
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw

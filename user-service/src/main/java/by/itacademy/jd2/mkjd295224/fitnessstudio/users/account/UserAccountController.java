@@ -1,6 +1,6 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.account;
 
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.EmailVerificationDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.account.mailing.dto.EmailVerificationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserLoginDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
@@ -25,7 +25,7 @@ public class UserAccountController {
 
     @PostMapping(path = "/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody UserRegistrationDto userRegistrationDto) {
+    public void register(@Valid @RequestBody UserRegistrationDto userRegistrationDto) {
         userAccountService.register(userRegistrationDto);
     }
 
@@ -37,7 +37,7 @@ public class UserAccountController {
 
     @PostMapping(path = "/login")
     @ResponseStatus(value = HttpStatus.OK)
-    public String login(@RequestBody UserLoginDto userLoginDto) {
+    public String login(@Valid @RequestBody UserLoginDto userLoginDto) {
         return userAccountService.login(userLoginDto);
     }
 

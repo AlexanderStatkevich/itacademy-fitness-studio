@@ -1,9 +1,9 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain.Recipe;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.mapper.RecipeMapper;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeCreateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.mapper.RecipeMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class RecipeController {
         this.mapper = mapper;
     }
 
-    @PreAuthorize(value = "hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody RecipeCreateDto recipeCreateDto) {
@@ -46,7 +46,8 @@ public class RecipeController {
         Page<Recipe> recipePage = recipeService.findAll(pageable);
         return recipePage.map(mapper::toDto);
     }
-    @PreAuthorize(value = "hasRole('ADMIN')")
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public void update(@PathVariable("uuid") UUID uuid,
                        @PathVariable("dt_update") LocalDateTime dtUpdate,

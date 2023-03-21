@@ -12,7 +12,6 @@
 
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>recipe-service</artifactId>
 
     <properties>
@@ -136,7 +135,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.0.4</version>
                 <configuration>
-                    <mainClass>by.itacademy.jd2.mkjd295224.fitnessstudio.users.Application</mainClass>
+                    <mainClass>by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.Application</mainClass>
                     <layout>JAR</layout>
                 </configuration>
                 <executions>

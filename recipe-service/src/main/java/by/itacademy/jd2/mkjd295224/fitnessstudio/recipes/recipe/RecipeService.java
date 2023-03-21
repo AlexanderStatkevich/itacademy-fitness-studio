@@ -1,12 +1,14 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain.Recipe;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.mapper.RecipeMapper;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.mapper.RecipeMapper;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,10 +25,14 @@ public class RecipeService implements IRecipeService {
         this.mapper = mapper;
     }
 
-    @PreAuthorize(value = "hasRole('ADMIN')")
     @Override
     public void create(RecipeCreateDto recipeCreateDto) {
         Recipe recipe = mapper.toEntity(recipeCreateDto);
+        recipe.getComposition().forEach(composition -> {
+            composition.setRecipe(recipe);
+            composition.setUuid(UUID.randomUUID());
+        });
+        recipe.setUuid(UUID.randomUUID());
         repository.save(recipe);
     }
 
@@ -35,6 +41,8 @@ public class RecipeService implements IRecipeService {
         return repository.findAll(pageable);
     }
 
+    @Transactional
+    @Lock(LockModeType.OPTIMISTIC)
     @Override
     public void update(UUID uuid, LocalDateTime dateTimeUpdate, RecipeCreateDto recipeCreateDto) {
         Recipe recipe = repository.getReferenceById(uuid);

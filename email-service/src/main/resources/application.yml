@@ -16,10 +16,7 @@ spring:
     test-connection: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5777/emailDB
-    username: postgres
-    password: Aries1994
+    url: jdbc:postgresql://email-db:5432/email
+    username: root
+    password: root
     driverClassName: org.postgresql.Driver
-
-server:
-  port: 1111

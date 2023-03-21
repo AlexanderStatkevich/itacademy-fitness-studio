@@ -1,11 +1,12 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain.Product;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.mapper.ProductMapper;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.ProductCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.ProductCreateUpdateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,8 +24,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void create(ProductCreateDto productCreateDto) {
-        Product product = mapper.toEntity(productCreateDto);
+    public void create(ProductCreateUpdateDto productCreateUpdateDto) {
+        Product product = mapper.toEntity(productCreateUpdateDto);
+        product.setUuid(UUID.randomUUID());
         repository.save(product);
     }
 
@@ -33,10 +35,11 @@ public class ProductService implements IProductService {
         return repository.findAll(pageable);
     }
 
+    @Transactional
     @Override
-    public void update(UUID uuid, LocalDateTime dateTimeUpdate, ProductCreateDto productCreateDto) {
+    public void update(UUID uuid, LocalDateTime dateTimeUpdate, ProductCreateUpdateDto productCreateUpdateDto) {
         Product product = repository.getReferenceById(uuid);
-        mapper.map(productCreateDto, product);
+        mapper.map(productCreateUpdateDto, product);
         product.setDateTimeUpdate(dateTimeUpdate);
         repository.save(product);
     }

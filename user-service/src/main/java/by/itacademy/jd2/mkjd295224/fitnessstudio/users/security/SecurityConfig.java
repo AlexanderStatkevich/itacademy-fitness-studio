@@ -1,5 +1,8 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.security;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.jwt.JwtAuthEntryPoint;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.jwt.JwtDeniedHandler;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -42,8 +45,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/verification").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/registration").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
-                        .requestMatchers("/api/v1/users/me").authenticated()
-                        .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
 

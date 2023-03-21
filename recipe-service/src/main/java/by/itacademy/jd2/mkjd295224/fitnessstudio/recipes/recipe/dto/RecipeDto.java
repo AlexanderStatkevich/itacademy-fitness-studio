@@ -1,16 +1,25 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.serialization.UnixSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+
 public record RecipeDto(
         UUID uuid,
-        LocalDateTime dateCreate,
-        LocalDateTime dateUpdate,
+        @JsonProperty(value = "dt_create")
+        @JsonSerialize(using = UnixSerializer.class)
+        LocalDateTime dateTimeCreate,
+        @JsonProperty(value = "dt_update")
+        @JsonSerialize(using = UnixSerializer.class)
+        LocalDateTime dateTimeUpdate,
         String title,
-        List<RecipeCompositionCreateDto> composition,
+        List<RecipeCompositionDto> composition,
         BigDecimal weight,
         BigDecimal calories,
         BigDecimal proteins,
@@ -18,36 +27,3 @@ public record RecipeDto(
         BigDecimal carbohydrates
 ) {
 }
-/*
-    {
-      "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "dt_create": 0,
-      "dt_update": 0,
-      "title": "Гречка с лисичками",
-      "composition": [
-        {
-          "product": {
-            "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "dt_create": 0,
-            "dt_update": 0,
-            "title": "Гречка",
-            "weight": 100,
-            "calories": 308,
-            "proteins": 12.6,
-            "fats": 3.3,
-            "carbohydrates": 57.1
-          },
-          "weight": 50,
-          "calories": 154,
-          "proteins": 6.3,
-          "fats": 1.65,
-          "carbohydrates": 28.55
-        }
-      ],
-      "weight": 50,
-      "calories": 154,
-      "proteins": 6.3,
-      "fats": 1.65,
-      "carbohydrates": 28.55
-    }
- */

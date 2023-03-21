@@ -19,20 +19,9 @@ public record UserDto(
         LocalDateTime dateTimeUpdate,
         @JsonProperty(value = "mail")
         String email,
+        @JsonProperty(value = "fio")
         String fullName,
         UserRole role,
         UserStatus status
 ) {
 }
-
-//JSON user return info object
-//{
-//  "uuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//  "dt_create": 0,
-//  "dt_update": 0,
-//  "email": "string",
-//  "fio": "string",
-//  "role": "ADMIN",
-//  "status": "WAITING_ACTIVATION"
-//}
-

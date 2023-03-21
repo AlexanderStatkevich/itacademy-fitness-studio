@@ -1,6 +1,7 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -10,8 +11,11 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
-public abstract class BaseEntityWithDateTime extends BaseEntity {
+public abstract class BaseEntityWithDateTime {
 
+    @Id
+    @Column(name = "uuid", updatable = false)
+    private UUID uuid;
     @Column(name = "date_time_create")
     private LocalDateTime dateTimeCreate;
     @Version
@@ -21,9 +25,12 @@ public abstract class BaseEntityWithDateTime extends BaseEntity {
     public BaseEntityWithDateTime() {
     }
 
-    public BaseEntityWithDateTime(UUID uuid, LocalDateTime dateTimeUpdate) {
-        super(uuid);
-        this.dateTimeUpdate = dateTimeUpdate;
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public LocalDateTime getDateTimeCreate() {

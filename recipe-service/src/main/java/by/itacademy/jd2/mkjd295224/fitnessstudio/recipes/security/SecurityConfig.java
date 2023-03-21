@@ -1,5 +1,8 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security.jwt.JwtAuthEntryPoint;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security.jwt.JwtDeniedHandler;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,7 +46,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated());
 
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

@@ -1,15 +1,17 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.users.account;
 
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.account.mailing.UserAccountClient;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.account.mailing.UserRegisteredEvent;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.account.mailing.dto.EmailVerificationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.UserRole;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.UserStatus;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.EmailVerificationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserLoginDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.mapper.UserMapper;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.JwtTokenProcessor;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.mapper.UserMapper;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.UserHolder;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.jwt.JwtTokenProcessor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserAccountService implements IUserAccountService, UserDetailsService {
@@ -37,7 +40,8 @@ public class UserAccountService implements IUserAccountService, UserDetailsServi
                               JwtTokenProcessor jwtTokenProcessor,
                               PasswordEncoder passwordEncoder,
                               UserMapper userMapper,
-                              UserHolder userHolder, ApplicationEventPublisher applicationEventPublisher) {
+                              UserHolder userHolder,
+                              ApplicationEventPublisher applicationEventPublisher) {
         this.repository = repository;
         this.userAccountClient = userAccountClient;
         this.jwtTokenProcessor = jwtTokenProcessor;
@@ -50,6 +54,7 @@ public class UserAccountService implements IUserAccountService, UserDetailsServi
     @Override
     public void register(UserRegistrationDto userRegistrationDto) {
         User user = userMapper.toEntity(userRegistrationDto);
+        user.setUuid(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(userRegistrationDto.password()));
         user.setStatus(UserStatus.WAITING_ACTIVATION);
         user.setRole(UserRole.USER);
@@ -75,8 +80,8 @@ public class UserAccountService implements IUserAccountService, UserDetailsServi
         String enteredPassword = userLoginDto.password();
         User user = repository.findUserByEmail(email);
         String actualPassword = user.getPassword();
-        if (!this.passwordEncoder.matches(enteredPassword, actualPassword)) {
-            throw new BadCredentialsException("Invalid password provided!");
+        if (!passwordEncoder.matches(enteredPassword, actualPassword)) {
+            throw new BadCredentialsException("invalid password");
         }
         return jwtTokenProcessor.generateAccessToken(user);
     }

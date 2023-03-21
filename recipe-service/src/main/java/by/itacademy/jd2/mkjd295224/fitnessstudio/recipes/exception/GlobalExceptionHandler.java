@@ -1,7 +1,7 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.ErrorResponse;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.ErrorResponseField;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.ErrorResponseUtils;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.StructuredErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
@@ -10,11 +10,11 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,13 +33,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(structuredErrorResponse);
     }
 
-    @ExceptionHandler(MissingPathVariableException.class)
-    public ResponseEntity<List<ErrorResponse>> handleMissingPathVariableException(MissingPathVariableException ex) {
-        String message = "The required path variable '" + ex.getVariableName() + "' is missing from the request URL.";
-        ErrorResponse errorResponse = new ErrorResponse(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
-    }
-
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<StructuredErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
         Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
@@ -48,37 +40,55 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(structuredErrorResponse);
     }
 
+    @ExceptionHandler(MissingPathVariableException.class)
+    public ResponseEntity<List<ErrorResponse>> handleMissingPathVariableException(MissingPathVariableException ex) {
+        String message = ex.getVariableName() + " variable is missing";
+        ErrorResponse errorResponse = new ErrorResponse(message);
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<List<ErrorResponse>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
-        String message = "The request body is not readable or is missing required fields.";
+        String message = "incorrect input";
         ErrorResponse errorResponse = new ErrorResponse(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(List.of(errorResponse));
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StructuredErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        List<ErrorResponseField> errorFields = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fieldError -> new ErrorResponseField(fieldError.getDefaultMessage(),
-                        fieldError.getField()))
-                .collect(Collectors.toList());
-
-        StructuredErrorResponse structuredErrorResponse = new StructuredErrorResponse(errorFields);
-        return ResponseEntity.badRequest().body(structuredErrorResponse);
-    }
-
-    @ExceptionHandler({EntityNotFoundException.class, OptimisticLockException.class, NullPointerException.class, SQLException.class})
+    @ExceptionHandler({OptimisticLockException.class, SQLException.class})
     public ResponseEntity<List<ErrorResponse>> handleGeneralServiceException(RuntimeException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
-        return ResponseEntity.internalServerError().body(List.of(errorResponse));
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
     }
 
-    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
-    public ResponseEntity<List<ErrorResponse>> handleAuthException(RuntimeException ex) {
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(List.of());
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<List<ErrorResponse>> handleAuthException(BadCredentialsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<List<ErrorResponse>> handleAuthException(EntityNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<List<ErrorResponse>> handleAuthException(UsernameNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.badRequest().body(List.of(errorResponse));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<List<ErrorResponse>> handleAuthException(AccessDeniedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(List.of(errorResponse));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<List<ErrorResponse>> handleException(Exception ex) {
+        String message = "server was unable to process the request correctly, please contact the administrator";
+        ErrorResponse errorResponse = new ErrorResponse(message);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of(errorResponse));
+    }
 
 }

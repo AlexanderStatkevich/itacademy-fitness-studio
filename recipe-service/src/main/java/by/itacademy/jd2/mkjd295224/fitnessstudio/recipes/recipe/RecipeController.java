@@ -1,7 +1,7 @@
 package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.domain.Recipe;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeCreateDto;
+import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.RecipeDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.recipe.dto.mapper.RecipeMapper;
 import org.springframework.data.domain.Page;
@@ -36,8 +36,8 @@ public class RecipeController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody RecipeCreateDto recipeCreateDto) {
-        recipeService.create(recipeCreateDto);
+    public void create(@RequestBody RecipeCreateUpdateDto recipeCreateUpdateDto) {
+        recipeService.create(recipeCreateUpdateDto);
     }
 
 
@@ -51,7 +51,7 @@ public class RecipeController {
     @PutMapping(path = "/{uuid}/dt_update/{dt_update}")
     public void update(@PathVariable("uuid") UUID uuid,
                        @PathVariable("dt_update") LocalDateTime dtUpdate,
-                       @RequestBody RecipeCreateDto recipeCreateDto) {
-        recipeService.update(uuid, dtUpdate, recipeCreateDto);
+                       @RequestBody RecipeCreateUpdateDto recipeCreateUpdateDto) {
+        recipeService.update(uuid, dtUpdate, recipeCreateUpdateDto);
     }
 }

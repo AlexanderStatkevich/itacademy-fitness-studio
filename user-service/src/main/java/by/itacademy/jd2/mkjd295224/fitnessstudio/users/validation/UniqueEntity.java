@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueEntity {
 
-    String message() default "already in use";
+    String message() default "{constraints.UserExist.message}";
 
     Class<?>[] groups() default {};
 

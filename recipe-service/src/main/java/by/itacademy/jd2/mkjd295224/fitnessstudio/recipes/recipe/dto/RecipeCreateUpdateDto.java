@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public record RecipeCreateDto(
+public record RecipeCreateUpdateDto(
         @NotBlank
         String title,
         List<RecipeCompositionCreateDto> composition

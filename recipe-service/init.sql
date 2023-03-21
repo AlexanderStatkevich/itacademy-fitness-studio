@@ -1,8 +1,8 @@
-CREATE SCHEMA data;
+CREATE SCHEMA IF NOT EXISTS data;
 
-CREATE TABLE products
+CREATE TABLE data.products
 (
-    id               uuid PRIMARY KEY,
+    uuid             uuid PRIMARY KEY,
     date_time_create timestamp(6)   NOT NULL,
     date_time_update timestamp(6)   NOT NULL,
     title            text           NOT NULL,
@@ -13,18 +13,18 @@ CREATE TABLE products
     carbohydrates    numeric(19, 2) NOT NULL
 );
 
-CREATE TABLE recipes
+CREATE TABLE data.recipes
 (
-    id               uuid PRIMARY KEY,
-    date_time_create timestamp(6) WITH TIME ZONE NOT NULL,
-    date_time_update timestamp(6) WITH TIME ZONE NOT NULL,
-    title            text                        NOT NULL
+    uuid             uuid PRIMARY KEY,
+    date_time_create timestamp(6) NOT NULL,
+    date_time_update timestamp(6) NOT NULL,
+    title            text         NOT NULL
 );
 
-CREATE TABLE recipe_composition
+CREATE TABLE data.recipe_compositions
 (
-    id         uuid PRIMARY KEY,
-    recipe_id  uuid NOT NULL REFERENCES recipes (id),
-    product_id uuid NOT NULL REFERENCES products (id),
+    uuid       uuid PRIMARY KEY,
+    recipe_id  uuid NOT NULL REFERENCES data.recipes (uuid),
+    product_id uuid NOT NULL REFERENCES data.products (uuid),
     weight     numeric(19, 2)
 );

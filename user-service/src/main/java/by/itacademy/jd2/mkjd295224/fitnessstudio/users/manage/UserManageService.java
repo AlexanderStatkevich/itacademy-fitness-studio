@@ -3,17 +3,20 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.users.manage;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.mapper.UserMapper;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
 public class UserManageService implements IUserManageService {
 
+    public static final int ZONE_OFFSET = 3;
     private final IUserManageRepository repository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +49,10 @@ public class UserManageService implements IUserManageService {
     @Override
     public void update(UUID uuid, LocalDateTime dateTimeUpdate, UserCreateUpdateDto userCreateUpdateDto) {
         User user = repository.getReferenceById(uuid);
+
+        if (user.getDateTimeUpdate().truncatedTo(ChronoUnit.MILLIS).equals(dateTimeUpdate.minusHours(ZONE_OFFSET))) {
+            throw new OptimisticLockException("user with " + uuid + " has been modified");
+        }
         userMapper.map(userCreateUpdateDto, user);
         user.setDateTimeUpdate(dateTimeUpdate);
         repository.save(user);

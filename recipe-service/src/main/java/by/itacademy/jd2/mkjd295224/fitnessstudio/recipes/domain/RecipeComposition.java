@@ -19,7 +19,6 @@ public class RecipeComposition extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
     @Column(name = "weight")
     private BigDecimal weight;
 

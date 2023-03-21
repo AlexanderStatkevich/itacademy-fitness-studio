@@ -12,7 +12,9 @@ import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserRegistrationDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.mapper.UserMapper;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.UserHolder;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.security.jwt.JwtTokenProcessor;
+import jakarta.validation.Valid;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -64,7 +66,7 @@ public class UserAccountService implements IUserAccountService, UserDetailsServi
 
     @Transactional
     @Override
-    public boolean verify(EmailVerificationDto emailVerificationDto) {
+    public boolean verify(@Valid EmailVerificationDto emailVerificationDto) {
         String email = emailVerificationDto.mail();
         String code = emailVerificationDto.code();
         Boolean verify = userAccountClient.verify(email, code);
@@ -79,6 +81,12 @@ public class UserAccountService implements IUserAccountService, UserDetailsServi
         String email = userLoginDto.email();
         String enteredPassword = userLoginDto.password();
         User user = repository.findUserByEmail(email);
+        if (user == null) {
+            throw new BadCredentialsException("user does not exist");
+        }
+        if (user.getStatus() != UserStatus.ACTIVATED) {
+            throw new AccessDeniedException("user does not activated yet");
+        }
         String actualPassword = user.getPassword();
         if (!passwordEncoder.matches(enteredPassword, actualPassword)) {
             throw new BadCredentialsException("invalid password");

@@ -16,9 +16,9 @@ public record UserCreateUpdateDto(
         @NotBlank
         @JsonProperty(value = "fio")
         String fullName,
-        @NotBlank
+
         UserRole role,
-        @NotBlank
+
         UserStatus status,
         @NotBlank
         String password

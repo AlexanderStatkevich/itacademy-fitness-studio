@@ -31,7 +31,7 @@ public class UserAccountController {
 
     @GetMapping(path = "/verification")
     @ResponseStatus(value = HttpStatus.OK)
-    public void verify(@Valid EmailVerificationDto emailVerificationDto) {
+    public void verify(EmailVerificationDto emailVerificationDto) {
         userAccountService.verify(emailVerificationDto);
     }
 

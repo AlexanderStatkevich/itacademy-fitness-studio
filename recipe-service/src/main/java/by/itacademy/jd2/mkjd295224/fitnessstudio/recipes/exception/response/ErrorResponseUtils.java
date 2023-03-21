@@ -1,7 +1,5 @@
-package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception;
+package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response;
 
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.ErrorResponseField;
-import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.exception.response.StructuredErrorResponse;
 import jakarta.validation.ConstraintViolation;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;

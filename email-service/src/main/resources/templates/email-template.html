@@ -9,6 +9,8 @@ Hello,<b th:text="${name}"></b>.
 For verification please use this link:
 <a th:href="@{{host}/verification(host = ${host},code=${code}, mail=${email})}"></a>
 
+If the link turned out to be broken, enter this <b th:text="${code}"></b> code at the verification address.
+
 <p>
     Regards, <br/>
     &emsp; <em>The it-academy team</em>

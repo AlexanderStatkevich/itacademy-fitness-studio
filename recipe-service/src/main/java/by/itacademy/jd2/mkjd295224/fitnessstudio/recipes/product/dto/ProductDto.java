@@ -2,12 +2,24 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.product.dto;
 
 import by.itacademy.jd2.mkjd295224.fitnessstudio.recipes.serialization.UnixSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@JsonPropertyOrder({
+        "uuid",
+        "dt_create",
+        "dt_update",
+        "title",
+        "weight",
+        "calories",
+        "proteins",
+        "fats",
+        "carbohydrates"
+})
 public record ProductDto(
         UUID uuid,
         @JsonProperty(value = "dt_create")

@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: data
+  datasource:
+    url: jdbc:postgresql://recipe-db:5432/recipe
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
+
+
+jwt:
+  secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
+  issuer: ITAcademy
+
+

@@ -3,6 +3,7 @@ package by.itacademy.jd2.mkjd295224.fitnessstudio.users.manage;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.domain.User;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.UserCreateUpdateDto;
 import by.itacademy.jd2.mkjd295224.fitnessstudio.users.dto.mapper.UserMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.OptimisticLockException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,9 +49,9 @@ public class UserManageService implements IUserManageService {
 
     @Override
     public void update(UUID uuid, LocalDateTime dateTimeUpdate, UserCreateUpdateDto userCreateUpdateDto) {
-        User user = repository.getReferenceById(uuid);
-
-        if (user.getDateTimeUpdate().truncatedTo(ChronoUnit.MILLIS).equals(dateTimeUpdate.minusHours(ZONE_OFFSET))) {
+        User user = repository.getByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
+        if (!user.getDateTimeUpdate().truncatedTo(ChronoUnit.MILLIS).equals(dateTimeUpdate.minusHours(ZONE_OFFSET))) {
             throw new OptimisticLockException("user with " + uuid + " has been modified");
         }
         userMapper.map(userCreateUpdateDto, user);

@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS data;
 
-CREATE TABLE users
+CREATE TABLE data.users
 (
     id               uuid PRIMARY KEY,
     date_time_create timestamp(6)        NOT NULL,
@@ -12,9 +12,9 @@ CREATE TABLE users
     password         varchar(255)        NOT NULL
 );
 
-CREATE INDEX users_email_index ON users (email);
+CREATE INDEX users_email_index ON data.users (email);
 
-INSERT INTO users(id, date_time_create, date_time_update, email, full_name, role, status, password)
+INSERT INTO data.users(id, date_time_create, date_time_update, email, full_name, role, status, password)
 VALUES (gen_random_uuid(),
         NOW(),
         NOW(),
